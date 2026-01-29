@@ -199,4 +199,18 @@ The following files are excluded from Git via `.gitignore`:
   - `@azure/cosmos` - Cosmos DB queries
   - `@azure/identity` - Managed identity support
 
+## 🤝 Community
+
+- [**Contributing Guidelines**](CONTRIBUTING.md) - Learn how to contribute to the project
+- [**Code of Conduct**](CODE_OF_CONDUCT.md) - Our community standards
+- [**Security Policy**](SECURITY.md) - Security reporting and best practices
+- [**Changelog**](CHANGELOG.md) - Version history and updates
+- [**License**](LICENSE) - MIT License
+
+## 📞 Support
+
+- 🐛 [Report a Bug](https://github.com/bradmca/azure-service-bus-and-cosmosdb-web-ui/issues/new?assignees=&labels=bug&template=bug.yml)
+- 💡 [Request a Feature](https://github.com/bradmca/azure-service-bus-and-cosmosdb-web-ui/issues/new?assignees=&labels=enhancement&template=feature.yml)
+- 💬 [Discussions](https://github.com/bradmca/azure-service-bus-and-cosmosdb-web-ui/discussions)
+
 **⭐ If this project helps you, please give it a star!**
