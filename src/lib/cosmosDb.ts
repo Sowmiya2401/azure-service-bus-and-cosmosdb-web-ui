@@ -1,4 +1,4 @@
-import { CosmosClient, Container } from "@azure/cosmos";
+import { CosmosClient } from "@azure/cosmos";
 
 import { getEnv } from "./env";
 
@@ -22,7 +22,9 @@ function ensureClient(): CosmosClient {
 // Cache client in development to avoid reconnections on hot reload
 const isProd = process.env.NODE_ENV === "production";
 if (!isProd) {
-    const g = global as any;
+    const g = global as typeof global & {
+        __cosmos_client?: CosmosClient;
+    };
     if (g.__cosmos_client) {
         cosmosClient = g.__cosmos_client;
     }

@@ -11,11 +11,11 @@ interface ActiveMessagesViewerProps {
 
 interface Message {
     messageId: string;
-    body: any;
+    body: Record<string, unknown> | string;
     sequenceNumber: string;
     enqueuedTimeUtc: string;
     subject?: string;
-    applicationProperties?: Record<string, any>;
+    applicationProperties?: Record<string, unknown>;
 }
 
 // Format date in UK format (DD/MM/YYYY HH:mm:ss)

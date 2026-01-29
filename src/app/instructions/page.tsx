@@ -96,7 +96,7 @@ export default function InstructionsPage() {
                                 <h2 className="text-xl font-bold text-[#002147]">Dead Letter Queue (DLQ) Management</h2>
                             </div>
                             <p className="text-[#333333] leading-relaxed mb-4">
-                                If a subscription has messages in its Dead Letter Queue, they will be visible in the "Dead Letter Messages" section of the subscription detail page.
+                                If a subscription has messages in its Dead Letter Queue, they will be visible in the &quot;Dead Letter Messages&quot; section of the subscription detail page.
                             </p>
 
                             <div className="bg-[#f5f5f5] rounded-lg p-6 border border-[#e0e0e0]">

@@ -69,7 +69,7 @@ export default function SubscriptionPage({ params }: { params: Promise<{ topic: 
             <div className="text-center p-12">
                 <AlertTriangle className="w-12 h-12 text-[#e30613] mx-auto mb-4" />
                 <h2 className="text-xl font-bold text-[#002147] mb-2">Subscription not found</h2>
-                <p className="text-[#666666] mb-6">The subscription you're looking for doesn't exist.</p>
+                <p className="text-[#666666] mb-6">The subscription you&apos;re looking for doesn&apos;t exist.</p>
                 <Link href="/" className="btn-primary">
                     <ArrowLeft className="w-4 h-4" />
                     Back to Dashboard

@@ -71,9 +71,9 @@ export default function CosmosPage() {
             }
             setContainers(prev => ({ ...prev, [databaseId]: data }));
             setExpandedDb(databaseId);
-        } catch (err: any) {
+        } catch (err) {
             console.error("Error loading containers:", err);
-            setError(err.message);
+            setError(err instanceof Error ? err.message : "Unknown error");
         } finally {
             setLoadingContainers(null);
         }
