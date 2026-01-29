@@ -1,0 +1,201 @@
+# Azure DevOps Pipeline for Next.js App Service Deployment
+# Uses variable groups for environment-specific configuration and Key Vault for secrets
+
+# Manual deployment only - no trigger
+trigger: none
+
+pr: none
+
+# Pipeline parameters for runtime configuration
+parameters:
+  - name: variableGroupName
+    displayName: "Variable Group to Use"
+    type: string
+    default: "dev-core"
+    values:
+      - "dev-core"
+      - "dev-core-tmp"
+      - "qa-core"
+      - "sbx-core"
+      - "sit-core"
+      - "uat-core"
+      - "prod-core"
+
+  - name: agentPool
+    displayName: "Agent Pool"
+    type: string
+    default: "Azure Pipelines"
+    values:
+      - "Azure Pipelines"
+      - "Default"
+
+  - name: deployInfraOnly
+    displayName: "Deploy Infrastructure Only (skip app deployment)"
+    type: boolean
+    default: false
+
+# Variables from the selected variable group
+variables:
+  - group: ${{ parameters.variableGroupName }}
+  - name: nodeVersion
+    value: "22.x"
+  - name: workingDirectory
+    value: "$(System.DefaultWorkingDirectory)"
+  # Computed app service name from variable group values
+  - name: appServiceName
+    value: "azure-ui-$(ENVIRONMENT)"
+
+stages:
+  # ============================================================================
+  # Stage: Build
+  # ============================================================================
+  - stage: Build
+    displayName: "Build Stage"
+    condition: and(succeeded(), eq('${{ parameters.deployInfraOnly }}', false))
+    jobs:
+      - job: Build
+        displayName: "Build Next.js App"
+        pool:
+          ${{ if eq(parameters.agentPool, 'Azure Pipelines') }}:
+            vmImage: "ubuntu-latest"
+          ${{ else }}:
+            name: ${{ parameters.agentPool }}
+        steps:
+          - task: NodeTool@0
+            displayName: "Use Node.js $(nodeVersion)"
+            inputs:
+              versionSpec: "$(nodeVersion)"
+
+          - script: |
+              npm ci
+            displayName: "Install Dependencies"
+            workingDirectory: $(workingDirectory)
+
+          - script: |
+              npm run build
+            displayName: "Build Next.js Application"
+            workingDirectory: $(workingDirectory)
+
+          - task: ArchiveFiles@2
+            displayName: "Archive application for deployment"
+            inputs:
+              rootFolderOrFile: "$(workingDirectory)/.next/standalone"
+              includeRootFolder: false
+              archiveType: "zip"
+              archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
+              replaceExistingArchive: true
+              verbose: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Artifact"
+            inputs:
+              pathToPublish: "$(Build.ArtifactStagingDirectory)"
+              artifactName: "drop"
+
+  # ============================================================================
+  # Stage: Deploy Infrastructure and Application
+  # ============================================================================
+  - stage: Deploy
+    displayName: "Deploy to $(ENVIRONMENT)"
+    dependsOn:
+      - Build
+    condition: and(or(eq('${{ parameters.deployInfraOnly }}', true), succeeded('Build')), not(canceled()))
+    jobs:
+      - job: Deploy
+        displayName: "Deploy to Azure App Service ($(ENVIRONMENT))"
+        pool:
+          ${{ if eq(parameters.agentPool, 'Azure Pipelines') }}:
+            vmImage: "ubuntu-latest"
+          ${{ else }}:
+            name: ${{ parameters.agentPool }}
+        steps:
+          - checkout: self
+
+          - task: AzureCLI@2
+            displayName: "Deploy Infrastructure (Bicep)"
+            inputs:
+              azureSubscription: $(SERVICE_CONNECTION)
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                set -e
+
+                echo "=========================================="
+                echo "Deploying Infrastructure"
+                echo "=========================================="
+                echo "Resource Group: $(SharedResourceGroupName)"
+                echo "Environment: $(ENVIRONMENT)"
+                echo "Key Vault: $(KeyVaultName)"
+                echo ""
+
+                bicep_output=$(az deployment group create \
+                  --resource-group "$(SharedResourceGroupName)" \
+                  --name "azure-ui-infra-$(Build.BuildId)" \
+                  --template-file infra/main.bicep \
+                  --parameters \
+                    environment="$(ENVIRONMENT)" \
+                    locationAbbreviation="uks" \
+                    identifier="$(IDENTIFIER)" \
+                    keyVaultName="$(KeyVaultName)" \
+                  --output json)
+
+                echo ""
+                echo "Extracting output variables..."
+                APP_SERVICE_NAME=$(echo $bicep_output | jq -r '.properties.outputs.appName.value')
+                KEY_VAULT_NAME=$(echo $bicep_output | jq -r '.properties.outputs.keyVaultName.value')
+
+                echo "App Service: $APP_SERVICE_NAME"
+                echo "Key Vault: $KEY_VAULT_NAME"
+                echo ""
+                echo "✅ Infrastructure deployment completed!"
+
+                # Set output variable for subsequent steps
+                echo "##vso[task.setvariable variable=DeployedAppServiceName;isOutput=true]$APP_SERVICE_NAME"
+            name: InfraDeployment
+
+          - ${{ if eq(parameters.deployInfraOnly, false) }}:
+              - task: DownloadBuildArtifacts@1
+                displayName: "Download Artifact"
+                inputs:
+                  buildType: "current"
+                  downloadType: "single"
+                  artifactName: "drop"
+                  downloadPath: "$(System.ArtifactsDirectory)"
+
+              - task: AzureWebApp@1
+                displayName: "Deploy Azure App Service"
+                inputs:
+                  azureSubscription: $(SERVICE_CONNECTION)
+                  appType: "webAppLinux"
+                  appName: "$(appServiceName)"
+                  package: "$(System.ArtifactsDirectory)/drop/$(Build.BuildId).zip"
+                  runtimeStack: "NODE|22-lts"
+                  startUpCommand: "node server.js"
+
+          - task: AzureCLI@2
+            displayName: "Post-Deployment Summary"
+            inputs:
+              azureSubscription: $(SERVICE_CONNECTION)
+              scriptType: "bash"
+              scriptLocation: "inlineScript"
+              inlineScript: |
+                echo ""
+                echo "=========================================="
+                echo "Deployment Complete - $(ENVIRONMENT)"
+                echo "=========================================="
+                echo ""
+                echo "App Service: $(appServiceName)"
+                echo "Resource Group: $(SharedResourceGroupName)"
+                echo "Key Vault: $(KeyVaultName)"
+                echo ""
+                echo "The App Service uses Key Vault references for secrets."
+                echo "Ensure the following secrets have values in Key Vault:"
+                echo "  - AUTH-SECRET"
+                echo "  - SERVICE-BUS-CONNECTION-STRING (used by app setting AZURE-SERVICE-BUS-CONNECTION-STRING)"
+                echo ""
+                echo "Set the following App Settings directly on the Web App (environment variables):"
+                echo "  - AUTH_USERNAME"
+                echo "  - AUTH_PASSWORD"
+                echo ""
+                echo "To restart the App Service after updating secrets:"
+                echo "  az webapp restart --name $(appServiceName) --resource-group $(SharedResourceGroupName)"

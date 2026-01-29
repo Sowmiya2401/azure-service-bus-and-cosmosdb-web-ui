@@ -1,0 +1,28 @@
+param(
+    [string]$ResourceGroupName = "rg-azure-store-dev",
+    [string]$Location = "uksouth",
+    [string]$SubscriptionId = "",  # TODO: Add your subscription ID
+    [string]$AppName = "azure-ui-dev",
+    [switch]$DeployInfra,
+    [string]$KeyVaultName,
+    [string]$Environment = "dev",
+    [string]$LocationAbbreviation = "uks",
+    [string]$Identifier = "app"
+)
+
+$ErrorActionPreference = "Stop"
+
+# Check for Azure CLI
+if (!(Get-Command az -ErrorAction SilentlyContinue)) {
+    Write-Error "Azure CLI (az) is not installed. Please install it first."
+    exit 1
+}
+
+# Check if subscription ID is provided
+if ([string]::IsNullOrEmpty($SubscriptionId)) {
+    Write-Error "Subscription ID is required. Please provide it as a parameter or update the script."
+    exit 1
+}
+
+# Rest of the deployment script remains the same...
+# (Full script content would continue here)
