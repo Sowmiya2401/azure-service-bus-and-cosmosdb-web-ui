@@ -15,14 +15,20 @@ A web application for managing Azure Service Bus topics/subscriptions and browsi
 
 This app connects to an Azure Service Bus namespace and provides:
 
+<img width="1271" height="902" alt="1a" src="https://github.com/user-attachments/assets/15a7c749-db22-4e27-a6b1-5736bf0b31fa" />
+
 - **Topic & Subscription Overview**: Lists all topics with their subscriptions, showing active message counts and DLQ message counts
 - **Message Inspection**: Peek at active messages in any subscription without consuming them
 - **Dead Letter Queue (DLQ) Viewer**: View messages that failed processing and ended up in the DLQ
 - **Message Resubmission**: Resubmit DLQ messages back to the original topic for reprocessing
 
+<img width="1268" height="889" alt="1c" src="https://github.com/user-attachments/assets/e820c4c6-9409-41a7-8bde-ce23f3d2796e" />
+<img width="633" height="732" alt="1d" src="https://github.com/user-attachments/assets/40ffbf66-0dc0-43a9-8120-de1e99ad2bb8" />
+
 **How it works**: The app uses the Azure Service Bus SDK to connect via either a connection string (local dev) or managed identity (production). It uses the Administration Client to list topics/subscriptions and their runtime properties, and the Service Bus Client to peek messages from subscriptions and their DLQs.
 
 ### Cosmos DB Explorer
+<img width="1280" height="797" alt="1b" src="https://github.com/user-attachments/assets/3dcdb733-a224-4dc2-bea0-5eaf22bad45b" />
 
 The app also provides a read-only explorer for Cosmos DB:
 
